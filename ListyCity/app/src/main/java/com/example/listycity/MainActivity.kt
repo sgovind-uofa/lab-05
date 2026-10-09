@@ -1,3 +1,4 @@
+
 package com.example.listycity
 
 import android.os.Bundle
@@ -26,6 +27,7 @@ class MainActivity : ComponentActivity() {
                         onUpdateCity = { oldCity, updatedCity ->
                             cityRepository.updateCity(oldCity, updatedCity)
                         },
+                        onDeleteCity = { cityRepository.deleteCity(it) },
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

@@ -1,3 +1,4 @@
+
 package com.example.listycity
 
 import androidx.compose.foundation.clickable
@@ -32,6 +33,7 @@ fun CityListScreen(
     cities: List<City>,
     onAddCity: (City) -> Unit,
     onUpdateCity: (City, City) -> Unit,
+    onDeleteCity: (City) -> Unit, // Added for delete functionality
     modifier: Modifier = Modifier
 ) {
     var newCityName by remember { mutableStateOf("") }
@@ -60,6 +62,7 @@ fun CityListScreen(
                 Text("+")
             }
         }
+
         if (showAddCityFields) {
             Row(
                 modifier = Modifier
@@ -81,6 +84,7 @@ fun CityListScreen(
                     label = { Text("Province") },
                     modifier = Modifier.weight(1f)
                 )
+
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Button(
@@ -104,6 +108,7 @@ fun CityListScreen(
                 }
             }
         }
+
         if (selectedCity != null) {
             Row(
                 modifier = Modifier
@@ -155,6 +160,7 @@ fun CityListScreen(
                 }
             }
         }
+
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             itemsIndexed(cities) { index, city ->
                 CityRow(
@@ -166,6 +172,15 @@ fun CityListScreen(
                         selectedCity = city
                         editedCityName = city.name
                         editedProvinceName = city.province
+                    },
+                    onDelete = { // Added for delete functionality
+                        onDeleteCity(city)
+
+                        if (selectedCity == city) {
+                            selectedCity = null
+                            editedCityName = ""
+                            editedProvinceName = ""
+                        }
                     }
                 )
                 if (index < cities.lastIndex) {
@@ -176,11 +191,11 @@ fun CityListScreen(
     }
 }
 
-
 @Composable
 fun CityRow(
     city: City,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDelete: () -> Unit // Added for delete functionality
 ) {
     Row(
         modifier = Modifier
@@ -199,6 +214,11 @@ fun CityRow(
             fontSize = 30.sp,
             modifier = Modifier.weight(1f)
         )
+
+        // Added for delete functionality
+        Button(onClick = onDelete) {
+            Text("Delete")
+        }
     }
 }
 
@@ -213,7 +233,8 @@ fun CityListScreenPreview() {
                 City("Calgary", "AB")
             ),
             onAddCity = {},
-            onUpdateCity = { _, _ -> }
+            onUpdateCity = { _, _ -> },
+            onDeleteCity = {} // Added for delete functionality
         )
     }
 }
